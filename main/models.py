@@ -14,10 +14,10 @@ class Order(models.Model):
         return self.id, self.pay_method, self.state, self.submit_date, self.check_in_date, self.check_out_date
 #顾客
 class Client(models.Model):
-    phone = models.CharField(max_length=10, primary_key=True)   #电话号码
+    phone = models.CharField(max_length=11, primary_key=True)   #电话号码
     email = models.CharField(max_length=40)                     #电子邮箱
     name = models.CharField(max_length=6)                       #姓名
-    sex = models.BooleanField()                                 #性别
+    sex = models.CharField(max_length=4)                        #性别
     def __str__(self):
         return self.phone, self.email, self.name, self.sex
 #房间
