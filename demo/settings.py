@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -28,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition 在此声明自建的子应用
 
 INSTALLED_APPS = [
@@ -38,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',#主应用
+    'main',  # 主应用
 ]
 
 MIDDLEWARE = [
@@ -56,7 +54,7 @@ ROOT_URLCONF = 'demo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'html')],  #前端文件位置
+        'DIRS': [os.path.join(BASE_DIR, 'html')],  # 前端文件位置
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,21 +69,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'demo.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {#连接的mysql配置
+DATABASES = {  # 连接的mysql配置
     'default': {
-    'ENGINE': 'django.db.backends.mysql',#数据库的类型
-    'NAME': 'datademo', #所使用的的数据库的名字
-    'USER': 'root', #数据库服务器的用户
-    'PASSWORD': 'yhv5tgh233', #密码
-    'HOST': '127.0.0.1', #主机
-    'PORT': '3306', #端口
+        'ENGINE': 'django.db.backends.mysql',  # 数据库的类型
+        'NAME': 'datademo',  # 所使用的的数据库的名字
+        'USER': 'root',  # 数据库服务器的用户
+        'PASSWORD': 'yhv5tgh233',  # 密码
+        'HOST': '127.0.0.1',  # 主机
+        'PORT': '3306',  # 端口
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -105,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -118,7 +113,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
