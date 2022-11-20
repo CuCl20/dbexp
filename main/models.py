@@ -12,9 +12,11 @@ class Order(models.Model):
     submit_date = models.DateTimeField()  # 订单提交时间
     check_in_date = models.DateTimeField()  # 入住时间
     check_out_date = models.DateTimeField()  # 退房时间
+    rid = models.IntegerField()  # 房号
 
     def __str__(self):
-        return self.id, self.phone, self.pay_method, self.state, self.submit_date, self.check_in_date, self.check_out_date
+        return self.id, self.phone, self.pay_method, self.state, self.submit_date, \
+               self.check_in_date, self.check_out_date, self.rid
 
 
 # 顾客
@@ -23,10 +25,9 @@ class Client(models.Model):
     email = models.CharField(max_length=40)  # 电子邮箱
     name = models.CharField(max_length=6)  # 姓名
     sex = models.CharField(max_length=4)  # 性别
-    rid = models.IntegerField()  # 房号
 
     def __str__(self):
-        return self.phone, self.email, self.name, self.sex, self.rid
+        return self.phone, self.email, self.name, self.sex
 
 
 # 房间

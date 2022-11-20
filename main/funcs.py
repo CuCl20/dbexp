@@ -2,13 +2,13 @@ import pymysql
 import datetime
 
 
-def add_client(phone, email, name, sex, rid):  # 增加旅客信息
+def add_client(phone, email, name, sex):  # 增加旅客信息
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "insert into main_client(phone, email, name, sex, rid) values('%s','%s','%s','%s',%d)" % \
-              (phone, email, name, sex, rid)
+        sql = "insert into main_client(phone, email, name, sex) values('%s','%s','%s','%s')" % \
+              (phone, email, name, sex)
         cursor.execute(sql)
         db.commit()
         return True
@@ -16,14 +16,14 @@ def add_client(phone, email, name, sex, rid):  # 增加旅客信息
         return False
 
 
-def add_order(id, phone, pay_method, state, submit_date, check_in_date, check_out_date):  # 增加订单信息
+def add_order(id, phone, pay_method, state, submit_date, check_in_date, check_out_date, rid):  # 增加订单信息
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "insert into main_order(id, phone, pay_method, state, submit_date, check_in_date, check_out_date) " \
-              "values('%s','%s',%d,%d,'%s','%s','%s')" % (id, phone, pay_method, state, submit_date, check_in_date,
-                                                          check_out_date)
+        sql = "insert into main_order(id, phone, pay_method, state, submit_date, check_in_date, check_out_date, rid) " \
+              "values('%s','%s',%d,%d,'%s','%s','%s',%d)" % (id, phone, pay_method, state, submit_date, check_in_date,
+                                                             check_out_date, rid)
         cursor.execute(sql)
         db.commit()
         return True
@@ -49,8 +49,9 @@ def seek_client(thephone):  # 按电话寻找旅客
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "select name,sex,phone,email,id,check_in_date,check_out_date from" \
-              "main_order left join main_client on main_order.phone = main_client.phone where phone='%d'" % thephone
+        sql = "select name,sex,phone,email,check_in_date,check_out_date from" \
+              " main_order left join main_client on main_order.phone = main_client.phone" \
+              " where main_client.phone='%d'" % thephone
         cursor.execute(sql)
         results = cursor.fetchall()
         for row in results:
@@ -58,10 +59,9 @@ def seek_client(thephone):  # 按电话寻找旅客
             sex = row[1]
             phone = row[2]
             email = row[3]
-            id = row[4]
-            check_in_date = row[5]
-            check_out_date = row[6]
-            print(name, sex, phone, email, id, check_in_date, check_out_date)
+            check_in_date = row[4]
+            check_out_date = row[5]
+            print(name, sex, phone, email, check_in_date, check_out_date)
         db.close()
     except:
         print("Error:unable to fetch data")
@@ -90,7 +90,7 @@ def seek_order(theid):  # 查找订单
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "select phone,id,state,pay_method,submit_date,check_in_date,check_out_date from" \
+        sql = "select phone,id,state,pay_method,submit_date,check_in_date,check_out_date,rid from" \
               " main_order where id='%d'" % theid
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -102,7 +102,8 @@ def seek_order(theid):  # 查找订单
             submit_date = row[4]
             check_in_date = row[5]
             check_out_date = row[6]
-            print(phone, id, state, pay_method, submit_date, check_in_date, check_out_date)
+            rid = row[7]
+            print(phone, id, state, pay_method, submit_date, check_in_date, check_out_date, rid)
         db.close()
     except:
         print("Error:unable to fetch data")
@@ -123,7 +124,7 @@ def update_order_check(phone, new_check_in, new_check_out):  # 修改订单时�
         print("Error:unable to update date")
 
 
-def change_room_state(rid, state):  # 换房
+def change_room_state(rid, state):  # 改变房间状态
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
@@ -141,7 +142,7 @@ def change_room(phone, old_rid, new_rid):  # 换房
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "update main_client set rid = %d where phone='%s'" % (new_rid, phone)
+        sql = "update main_order set rid = %d where phone='%s'" % (new_rid, phone)
         cursor.execute(sql)
         db.commit()
         change_room_state(old_rid, 0)
@@ -156,11 +157,9 @@ def update_order_payment(phone):  # 订单付款
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        now_time = datetime.datetime.now()
         sql = "update main_order set state = 1 where phone='%s'" % phone
         cursor.execute(sql)
         db.commit()
         db.close()
     except:
         print("Error:unable to update pay state")
-
