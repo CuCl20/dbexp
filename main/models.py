@@ -7,7 +7,7 @@ import main
 class Order(models.Model):
     id = models.CharField(max_length=15, primary_key=True)  # 订单号
     phone = models.CharField(max_length=11)  # 电话号码
-    pay_method = models.IntegerField()  # 付款方式
+    pay_method = models.IntegerField()  # 支付方式
     state = models.IntegerField()  # 订单状态
     submit_date = models.DateTimeField()  # 订单提交时间
     check_in_date = models.DateTimeField()  # 入住时间
@@ -22,7 +22,7 @@ class Order(models.Model):
 # 顾客
 class Client(models.Model):
     phone = models.CharField(max_length=11, primary_key=True)  # 电话号码
-    email = models.CharField(max_length=40)  # 电子邮箱
+    email = models.CharField(max_length=20)  # 电子邮件
     name = models.CharField(max_length=6)  # 姓名
     sex = models.CharField(max_length=4)  # 性别
 
@@ -34,7 +34,30 @@ class Client(models.Model):
 class Room(models.Model):
     id = models.IntegerField(primary_key=True)  # 房号
     kind = models.IntegerField()  # 房间类型
-    state = models.BooleanField()  # 房间状态
 
     def __str__(self):
-        return self.id, self.kind, self.state
+        return self.id, self.kind
+
+
+# 房间状态
+class State(models.Model):
+    id = models.IntegerField(primary_key=True)  # 房号
+    day1 = models.IntegerField()  # 今日
+    day2 = models.IntegerField()  # 第二天
+    day3 = models.IntegerField()  # 第三天
+    day4 = models.IntegerField()  # 第四天
+    day5 = models.IntegerField()  # 第五天
+    day6 = models.IntegerField()  # 第六天
+    day7 = models.IntegerField()  # 第七天
+
+    def __str__(self):
+        return self.id, self.day1, self.day2, self.day3, self.day4, self.day5, self.day6, self.day7
+
+
+# 管理员
+class Admin(models.Model):
+    id = models.IntegerField(primary_key=True)  # 编号
+    password = models.CharField(max_length=20)  # 密码
+
+    def __str__(self):
+        return self.id, self.password
