@@ -4,20 +4,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>人力资源管理系统-部门管理</title>
+    <title>酒店管理系统</title>
     <link rel="stylesheet" href="{% static 'dist/css/bootstrap.min.css' %}">
 </head>
 <body>
 
 
-<div class="department-block" style="width: 1400px; margin-left: 200px;margin-top: 100px;">
+<div class="department-block" style="width: 1200px; margin-left: 200px;margin-top: 100px;">
     <div class="department-nav">
 
         <div class="row" style="height: 30px;">
             <form>
                 <div class="row">
                     <div class="form-group" style="margin-left: 50px;">
-                        <input type="text" class="form-control" id="key" placeholder="请输入订单编号...">
+                        <input type="text" name="OID" class="form-control" id="key" placeholder="请输入订单编号...">
                     </div>
                     <button class="btn btn-primary btn-sm" style="margin-left: 10px; height: 40px;">查找</button>
                 </div>
@@ -35,26 +35,27 @@
                 <thead>
                     <tr>
                         <th scope="col">订单号</th>
+                        <th scope="col">电话号码</th>
                         <th scope="col">付款方式</th>
                         <th scope="col">状态</th>
                         <th scope="col">订房日期</th>
                         <th scope="col">入住日期</th>
                         <th scope="col">退房日期</th>
-                        <th scope="col">订单金额</th>
-                        <th scope="col">姓名</th>
-                        <th scope="col">手机号码</th>
-                        <th scope="col">居住地址</th>
-                        <th scope="col">电子邮箱</th>
-                        <th scope="col">取消时间</th>
+                        <th scope="col">房间号</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for Order in Order_list %}
+                    {% for i in results %}
                     <tr>
-                        <th scope="row">{{ Order.id }}</th>
-                        <td>{{ Order.id }}</td>
-                        <td>{{Order.submit_date}}</td>
+                        <th scope="row">{{ i.0 }}</th>
+                        <td>{{ i.1 }}</td>
+                        <td>{{ i.2 }}</td>
+                        <td>{{ i.3 }}</td>
+                        <td>{{ i.4 }}</td>
+                        <td>{{ i.5 }}</td>
+                        <td>{{ i.6 }}</td>
+                        <td>{{ i.7 }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -5,7 +5,7 @@ import datetime
 def register(id, password):  # 注册
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "insert into main_admin(id, password) values(%d,'%s')" % \
               (id, password)
@@ -19,7 +19,7 @@ def register(id, password):  # 注册
 def add_client(phone, email, name, sex):  # 增加旅客信息
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "insert into main_client(phone, email, name, sex) values('%s','%s','%s','%s')" % \
               (phone, email, name, sex)
@@ -43,6 +43,7 @@ def add_order(id, phone, pay_method, state, submit_date, check_in_date, check_ou
         change_room_state(rid, check_in_date, check_out_date, 1)
         return True
     except Exception as e:
+        print("error")
         return False
 
 
@@ -66,7 +67,7 @@ def add_room(id, kind):  # 增加房间信息
 def seek_client(thephone):  # 按电话寻找旅客
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "select name,sex,main_client.phone,email,check_in_date,check_out_date from" \
               " main_order join main_client on main_client.phone" \
@@ -89,7 +90,7 @@ def seek_client(thephone):  # 按电话寻找旅客
 def seek_room():  # 查询房间余量
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "select kind,count(id) as num from" \
               " main_room where state = 1 group by kind order by kind"
@@ -104,26 +105,32 @@ def seek_room():  # 查询房间余量
         print("Error:unable to fetch data")
 
 
+def seek_all_order():  # 显示所有订单
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select * from main_order"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        print(results)
+        db.close()
+        return results
+    except:
+        print("Error:unable to fetch data")
+
+
 def seek_order(theid):  # 查找订单
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "select phone,id,state,pay_method,submit_date,check_in_date,check_out_date,rid from" \
-              " main_order where id='%d'" % theid
+        sql = "select id,phone,pay_method,state,submit_date,check_in_date,check_out_date,rid from" \
+              " main_order where id='%s'" % theid
         cursor.execute(sql)
         results = cursor.fetchall()
-        for row in results:
-            phone = row[0]
-            id = row[1]
-            state = row[2]
-            pay_method = row[3]
-            submit_date = row[4]
-            check_in_date = row[5]
-            check_out_date = row[6]
-            rid = row[7]
-            print(phone, id, state, pay_method, submit_date, check_in_date, check_out_date, rid)
         db.close()
+        return results
     except:
         print("Error:unable to fetch data")
 
@@ -131,7 +138,7 @@ def seek_order(theid):  # 查找订单
 def update_order_check(phone, new_check_in, new_check_out):  # 修改订单时间
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         now_time = datetime.date.today()
         sql = "select phone,id,state,pay_method,submit_date,check_in_date,check_out_date,rid from" \
@@ -159,6 +166,8 @@ def change_room_state(rid, check_in_date, check_out_date, come):  # 改变房间
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         now_time = datetime.date.today()
+        print(check_in_date)
+        print(now_time)
         start = (check_in_date - now_time).days
         finish = (check_out_date - now_time).days
         for i in range(start, finish):
@@ -173,7 +182,7 @@ def change_room_state(rid, check_in_date, check_out_date, come):  # 改变房间
 def change_room(phone, old_rid, new_rid):  # 换房&修改订单房间
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "update main_order set rid = %d where phone='%s'" % (new_rid, phone)
         cursor.execute(sql)
@@ -194,7 +203,7 @@ def change_room(phone, old_rid, new_rid):  # 换房&修改订单房间
 def update_order_payment(phone):  # 订单付款
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='yhv5tgh233', port=3306, db='datademo')
+                             password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "update main_order set state = 1 where phone='%s'" % phone
         cursor.execute(sql)
@@ -202,6 +211,3 @@ def update_order_payment(phone):  # 订单付款
         db.close()
     except:
         print("Error:unable to update pay state")
-
-
-change_room(0, 404, 22)
