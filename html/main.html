@@ -18,6 +18,15 @@
                 <div class="row">
                     <div class="form-group" style="margin-left: 50px;">
                         <input type="text" name="OID" class="form-control" id="key" placeholder="请输入订单编号...">
+                        <input type="text" name="PHO" class="form-control" id="key" placeholder="请输入电话号码...">
+                        <input type="text" name="STA" class="form-control" id="key" placeholder="请输入订单状态...">
+                        <input type="text" name="MET" class="form-control" id="key" placeholder="请输入付款方式...">
+                        <input type="text" name="RID" class="form-control" id="key" placeholder="请输入房间号...">
+                    </div>
+                    <div class="form-group" style="margin-left: 50px;">
+                        <input type="date" name="SUB" class="form-control" id="key" placeholder="请选择提交日期...">
+                        <input type="date" name="IND" class="form-control" id="key" placeholder="请选择入住日期...">
+                        <input type="date" name="OUT" class="form-control" id="key" placeholder="请选择退房日期...">
                     </div>
                     <button class="btn btn-primary btn-sm" style="margin-left: 10px; height: 40px;">查找</button>
                 </div>
@@ -26,10 +35,15 @@
                 {% csrf_token %}
                 <button class="btn btn-primary btn-sm" style="margin-left: 30px; height: 40px;">添加新订单</button>
             </form>
+            <form action="/update_order/" method="post">
+                {% csrf_token %}
+                <br>
+                <button class="btn btn-primary btn-sm" style="margin-left: 30px; height: 40px;">更新或取消入住</button>
+            </form>
         </div>
     </div>
 
-    <div class="card" style="margin-top: 20px;">
+    <div class="card" style="margin-top: 160px;">
         <div class="card-body">
             <table class="table">
                 <thead>

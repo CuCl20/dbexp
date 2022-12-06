@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新/取消订单</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
+</head>
+<body>
+    <h1>修改订单时间</h1>
+    <form action="/submit2/" method="post">
+        {% csrf_token %}
+        <label for="phone">电话号码</label>
+        <input type="text" id="phone" name="phone">
+        <label for="new_in">新的入住时间</label>
+        <input type="date" id="new_in" name="new_in">
+        <label for="new_out">新的退房时间</label>
+        <input type="date" id="new_out" name="new_out">
+        <button type="submit">确认修改</button>
+    </form>
+    <h1>修改订单房间</h1>
+    <form action="/submit3/" method="post">
+        {% csrf_token %}
+        <label for="phone2">电话号码</label>
+        <input type="text" id="phone2" name="phone">
+        <label for="old_rid">旧房间号</label>
+        <input type="number" id="old_rid" name="old_rid">
+        <label for="new_rid">新房间号</label>
+        <input type="number" id="new_rid" name="new_rid">
+        <button type="submit">确认修改</button>
+    </form>
+    <h1>取消订单</h1>
+    <form action="/submit4/" method="post">
+        {% csrf_token %}
+        <label for="phone3">电话号码</label>
+        <input type="text" id="phone3" name="phone">
+        <button type="submit">确认取消</button>
+    </form>
+</body>
+</html>

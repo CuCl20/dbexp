@@ -5,7 +5,7 @@ import datetime
 def register(id, password):  # 注册
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password=' ', port=3306, db='datademo')
+                             password='', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "insert into main_admin(id, password) values(%d,'%s')" % \
               (id, password)
@@ -19,7 +19,7 @@ def register(id, password):  # 注册
 def add_client(phone, email, name, sex):  # 增加旅客信息
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password=' ', port=3306, db='datademo')
+                             password='', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "insert into main_client(phone, email, name, sex) values('%s','%s','%s','%s')" % \
               (phone, email, name, sex)
@@ -120,13 +120,15 @@ def seek_all_order():  # 显示所有订单
         print("Error:unable to fetch data")
 
 
-def seek_order(theid):  # 查找订单
+def seek_order(element):  # 查找订单
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "select id,phone,pay_method,state,submit_date,check_in_date,check_out_date,rid from" \
-              " main_order where id='%s'" % theid
+              f" main_order where (id={element[0]} or {element[0]} is null) and (phone={element[2]} or {element[2]} is null) and (pay_method={element[4]} or {element[4]} is null) " \
+              f"and (state={element[3]} or {element[3]} is null) and (submit_date={element[5]} or {element[5]} is null) and (check_in_date={element[6]} or {element[6]} is null) and (check_out_date={element[7]} or {element[7]} is null) and (rid={element[1]} or {element[1]} is null)"
+        print(sql)
         cursor.execute(sql)
         results = cursor.fetchall()
         db.close()
@@ -138,7 +140,7 @@ def seek_order(theid):  # 查找订单
 def update_order_check(phone, new_check_in, new_check_out):  # 修改订单时间
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password=' ', port=3306, db='datademo')
+                             password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         now_time = datetime.date.today()
         sql = "select phone,id,state,pay_method,submit_date,check_in_date,check_out_date,rid from" \
@@ -146,8 +148,8 @@ def update_order_check(phone, new_check_in, new_check_out):  # 修改订单时�
         cursor.execute(sql)
         results = cursor.fetchall()
         for row in results:
-            check_in = row[5]
-            check_out = row[6]
+            check_in = row[5].date()
+            check_out = row[6].date()
             rid = row[7]
             change_room_state(rid, check_in, check_out, 0)
             change_room_state(rid, new_check_in, new_check_out, 1)
@@ -166,8 +168,6 @@ def change_room_state(rid, check_in_date, check_out_date, come):  # 改变房间
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         now_time = datetime.date.today()
-        print(check_in_date)
-        print(now_time)
         start = (check_in_date - now_time).days
         finish = (check_out_date - now_time).days
         for i in range(start, finish):
@@ -182,7 +182,7 @@ def change_room_state(rid, check_in_date, check_out_date, come):  # 改变房间
 def change_room(phone, old_rid, new_rid):  # 换房&修改订单房间
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password=' ', port=3306, db='datademo')
+                             password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "update main_order set rid = %d where phone='%s'" % (new_rid, phone)
         cursor.execute(sql)
@@ -206,6 +206,43 @@ def update_order_payment(phone):  # 订单付款
                              password=' ', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "update main_order set state = 1 where phone='%s'" % phone
+        cursor.execute(sql)
+        db.commit()
+        db.close()
+    except:
+        print("Error:unable to update pay state")
+
+
+def show_all_rooms():
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select * from main_room natural join main_state where main_room.id = main_state.id"
+        cursor.execute(sql)
+        db.commit()
+        results = cursor.fetchall()
+        db.close()
+        return results
+    except:
+        print("Error:unable to show all rooms")
+
+
+def delete_order(phone):  # 按电话删除订单
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select check_in_date,check_out_date,rid from main_order where phone='%s'" % phone
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        for row in result:
+            check_in = row[0].date()
+            check_out = row[1].date()
+            rid = row[2]
+            change_room_state(rid, check_in, check_out, 0)
+        db.commit()
+        sql = "delete from main_order where phone='%s'" % phone
         cursor.execute(sql)
         db.commit()
         db.close()
