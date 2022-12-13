@@ -37,8 +37,11 @@
             </form>
             <form action="/update_order/" method="post">
                 {% csrf_token %}
-                <br>
                 <button class="btn btn-primary btn-sm" style="margin-left: 30px; height: 40px;">更新或取消入住</button>
+            </form>
+            <form action="/checkin/" method="post">
+                {% csrf_token %}
+                <button class="btn btn-primary btn-sm" style="margin-left: 30px; height: 40px;">入住手续</button>
             </form>
         </div>
     </div>

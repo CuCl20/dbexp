@@ -1,0 +1,47 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录注册界面</title>
+    <style>.account {
+        width: 500px;
+        height: 400px;
+        border: 2px solid #dddddd;
+        border-radius: 5px;
+        box-shadow: 5px 5px 20px #aaa;
+
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100px;
+        padding: 20px 40px;
+    }
+
+    .account h2 {
+        margin-top: 10px;
+        text-align: center;
+    }
+    </style>
+    <link rel="stylesheet" href="{% static 'dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="account">
+    <h2>用户注册</h2>
+    <form method="post" action="/register/">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleInputEmail1">用户名（数字）</label>
+            <input type="text" class="form-control" name="user" id="exampleInputEmail1" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">密码</label>
+            <input type="password" class="form-control" name="pwd" id="exampleInputPassword1" placeholder="请输入密码">
+        </div>
+        <div style="margin-left:180px;display: inline-block">
+            <button style="margin-top: 25px" type="submit" onclick="myfunc()" class="btn btn-primary">确认</button>
+        </div>
+        <div style="color: red;">{{ error_msg }}</div>
+    </form>
+</div>
+
+</body>
+</html>

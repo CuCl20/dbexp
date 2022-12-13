@@ -22,7 +22,7 @@ class Order(models.Model):
 # 顾客
 class Client(models.Model):
     phone = models.CharField(max_length=11, primary_key=True)  # 电话号码
-    email = models.CharField(max_length=20)  # 电子邮件
+    email = models.CharField(max_length=30)  # 电子邮件
     name = models.CharField(max_length=6)  # 姓名
     sex = models.CharField(max_length=4)  # 性别
 
@@ -57,7 +57,7 @@ class State(models.Model):
 # 管理员
 class Admin(models.Model):
     id = models.IntegerField(primary_key=True)  # 编号
-    password = models.CharField(max_length=20)  # 密码
+    password = models.CharField(max_length=20, default='0000')  # 密码
 
     def __str__(self):
         return self.id, self.password

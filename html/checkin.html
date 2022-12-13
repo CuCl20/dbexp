@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>入住手续</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
+</head>
+<body>
+    <form action="/checkin/" method="post">
+        {% csrf_token %}
+        <h1>手续1：基本信息录入</h1>
+        <label for="name">旅客姓名</label>
+        <input type="text" id="name" name="name">
+        <label for="sex">性别</label>
+        <input type="text" id="sex" name="sex">
+        <label for="phone">电话号码</label>
+        <input type="text" id="phone" name="phone">
+        <label for="email">邮箱（非必填）</label>
+        <input type="text" id="email" name="email" value="0">
+        <h1>手续2：付款</h1>
+        <fieldset>
+            <legend>是否付款？</legend>
+            <label>
+                是
+                <input type="radio" name="pay" value="1">
+            </label>
+            <br>
+            <label>
+                否
+                <input type="radio" name="pay" value="0">
+            </label>
+        </fieldset>
+        <button type="submit">确认</button>
+    </form>
+<div>
+    {{ error }}
+</div>
+
+</body>
+</html>

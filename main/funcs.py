@@ -5,7 +5,7 @@ import datetime
 def register(id, password):  # 注册
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='', port=3306, db='datademo')
+                             password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "insert into main_admin(id, password) values(%d,'%s')" % \
               (id, password)
@@ -16,10 +16,24 @@ def register(id, password):  # 注册
         return False
 
 
+def login(id): # 登录
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select password from main_admin where id=%d" % id
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        db.close()
+        return results
+    except:
+        print("error")
+
+
 def add_client(phone, email, name, sex):  # 增加旅客信息
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password='', port=3306, db='datademo')
+                             password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "insert into main_client(phone, email, name, sex) values('%s','%s','%s','%s')" % \
               (phone, email, name, sex)
@@ -110,7 +124,7 @@ def seek_all_order():  # 显示所有订单
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "select * from main_order"
+        sql = "select id,phone,pay_method,state,submit_date,check_in_date,check_out_date,rid from main_order"
         cursor.execute(sql)
         results = cursor.fetchall()
         print(results)
@@ -203,7 +217,7 @@ def change_room(phone, old_rid, new_rid):  # 换房&修改订单房间
 def update_order_payment(phone):  # 订单付款
     try:
         db = pymysql.connect(host='localhost', user='root',
-                             password=' ', port=3306, db='datademo')
+                             password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "update main_order set state = 1 where phone='%s'" % phone
         cursor.execute(sql)

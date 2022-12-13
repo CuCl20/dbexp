@@ -1,16 +1,48 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Order, Client, Room  # 引用模板层中的类
+from django.db import models
 from . import funcs
 import logging
 import datetime
+import pymysql
 
 logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+# 登陆界面
+def login(request):
+    if request.method == "GET":
+        return render(request, "login.html")
+    # 如果是POST请求，获取用户提交的数据
+    username = int(request.POST.get("user"))
+    password = request.POST.get("pwd")
+    try:
+        results = funcs.login(username)
+        if results[0][0] == password:
+            return redirect("/main/")
+        else:
+            return render(request, "login.html", {"error_msg": "用户名或密码错误"})
+    except:
+        return render(request, "login.html", {"error_msg": "用户名或密码错误"})
+
+
+def register(request):
+    if request.method == "GET":
+        return render(request, "register.html")
+
+    try:
+        username = int(request.POST.get("user"))
+        password = request.POST.get("pwd")
+        funcs.register(username, password)
+        return render(request, "login.html")
+    except:
+        return render(request, "register.html", {"error_msg": "注册失败"})
+
+
 # 主界面
 def mainview(request):
-    return render(request, 'main.html')
+    return render(request, 'main.html', locals())
 
 
 # 添加新订单
@@ -89,3 +121,17 @@ def delete_o(request):
     phone = request.POST.get("phone")
     funcs.delete_order(phone)
     return render(request, 'submit4.html')
+
+
+def check_in_progress(request):
+    phone = request.POST.get("phone")
+    email = request.POST.get("email")
+    name = request.POST.get("name")
+    sex = request.POST.get("sex")
+    pay = request.POST.get("pay")
+    if pay == '0':
+        return render(request, 'checkin.html', {"error": "办理失败"})
+    else:
+        funcs.add_client(phone, email, name, sex)
+        funcs.update_order_payment(phone)
+        return render(request, 'checkin.html')
