@@ -16,7 +16,7 @@ def register(id, password):  # 注册
         return False
 
 
-def login(id): # 登录
+def login(id):  # 登录
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
@@ -124,10 +124,10 @@ def seek_all_order():  # 显示所有订单
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "select id,phone,pay_method,state,submit_date,check_in_date,check_out_date,rid from main_order"
+        sql = "select id,phone,pay_method,state,submit_date,check_in_date,check_out_date,rid from main_order " \
+              "order by check_in_date"
         cursor.execute(sql)
         results = cursor.fetchall()
-        print(results)
         db.close()
         return results
     except:
@@ -140,9 +140,11 @@ def seek_order(element):  # 查找订单
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         sql = "select id,phone,pay_method,state,submit_date,check_in_date,check_out_date,rid from" \
-              f" main_order where (id={element[0]} or {element[0]} is null) and (phone={element[2]} or {element[2]} is null) and (pay_method={element[4]} or {element[4]} is null) " \
-              f"and (state={element[3]} or {element[3]} is null) and (submit_date={element[5]} or {element[5]} is null) and (check_in_date={element[6]} or {element[6]} is null) and (check_out_date={element[7]} or {element[7]} is null) and (rid={element[1]} or {element[1]} is null)"
-        print(sql)
+              f" main_order where (id={element[0]} or {element[0]} is null) and" \
+              f" (phone={element[2]} or {element[2]} is null) and (pay_method={element[4]} or {element[4]} is null) " \
+              f"and (state={element[3]} or {element[3]} is null) and (submit_date={element[5]} or {element[5]} is " \
+              f"null) and (check_in_date={element[6]} or {element[6]} is null) and (check_out_date={element[7]} or" \
+              f" {element[7]} is null) and (rid={element[1]} or {element[1]} is null) order by check_in_date"
         cursor.execute(sql)
         results = cursor.fetchall()
         db.close()
@@ -151,14 +153,14 @@ def seek_order(element):  # 查找订单
         print("Error:unable to fetch data")
 
 
-def update_order_check(phone, new_check_in, new_check_out):  # 修改订单时间
+def update_order_check(id, new_check_in, new_check_out):  # 修改订单时间
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
         now_time = datetime.date.today()
         sql = "select phone,id,state,pay_method,submit_date,check_in_date,check_out_date,rid from" \
-              " main_order where phone='%s'" % phone
+              " main_order where id='%s'" % id
         cursor.execute(sql)
         results = cursor.fetchall()
         for row in results:
@@ -168,7 +170,7 @@ def update_order_check(phone, new_check_in, new_check_out):  # 修改订单时�
             change_room_state(rid, check_in, check_out, 0)
             change_room_state(rid, new_check_in, new_check_out, 1)
         sql = "update main_order set check_in_date='%s',check_out_date='%s'" \
-              ",submit_date='%s' where phone='%s'" % (new_check_in, new_check_out, now_time, phone)
+              ",submit_date='%s' where id='%s'" % (new_check_in, new_check_out, now_time, id)
         cursor.execute(sql)
         db.commit()
         db.close()
@@ -193,15 +195,15 @@ def change_room_state(rid, check_in_date, check_out_date, come):  # 改变房间
         print("Error:unable to change room state")
 
 
-def change_room(phone, old_rid, new_rid):  # 换房&修改订单房间
+def change_room(id, old_rid, new_rid):  # 换房&修改订单房间
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "update main_order set rid = %d where phone='%s'" % (new_rid, phone)
+        sql = "update main_order set rid = %d where id='%s'" % (new_rid, id)
         cursor.execute(sql)
         db.commit()
-        sql = "select check_in_date,check_out_date from main_order where phone='%s'" % phone
+        sql = "select check_in_date,check_out_date from main_order where id='%s'" % id
         cursor.execute(sql)
         result = cursor.fetchall()
         for row in result:
@@ -242,12 +244,12 @@ def show_all_rooms():
         print("Error:unable to show all rooms")
 
 
-def delete_order(phone):  # 按电话删除订单
+def delete_order(id):  # 按订单号删除订单
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "select check_in_date,check_out_date,rid from main_order where phone='%s'" % phone
+        sql = "select check_in_date,check_out_date,rid from main_order where id='%s'" % id
         cursor.execute(sql)
         result = cursor.fetchall()
         for row in result:
@@ -256,9 +258,177 @@ def delete_order(phone):  # 按电话删除订单
             rid = row[2]
             change_room_state(rid, check_in, check_out, 0)
         db.commit()
-        sql = "delete from main_order where phone='%s'" % phone
+        sql = "delete from main_order where id='%s'" % id
         cursor.execute(sql)
         db.commit()
         db.close()
     except:
         print("Error:unable to update pay state")
+
+
+def update_time():  # 时间更新
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        for i in range(1, 6):
+            sql = "update main_state set day%d = day%d" % (i, i + 1)
+            cursor.execute(sql)
+            db.commit()
+        sql = "update main_state set day7 = 0"
+        cursor.execute(sql)
+        db.commit()
+    except:
+        print("Error:unable to update time")
+
+
+def get_max_id():  # 获取最大订单号
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select max(id) from main_order"
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        if result[0] is None:
+            return 0
+        return result[0]
+    except:
+        result = 0
+        return result
+
+
+def if_room_exist(rid):  # 是否存在房间
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select id from main_room where id = %d" % rid
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        return result[0]
+    except:
+        result = 0
+        return result
+
+
+def if_order_exist(id):  # 是否存在订单
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select id from main_order where id = '%s'" % id
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        return result[0]
+    except:
+        result = 0
+        return result
+
+
+def if_room_occupied(rid, check_in, check_out):  # 房间是否占用
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select * from main_state where id = %d" % rid
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        start = (check_in - datetime.date.today()).days + 1
+        finish = (check_out - datetime.date.today()).days + 1
+        if_r = 0
+        for i in range(start, finish):
+            if result[i] == 1:
+                print(i)
+                if_r = 1
+        return if_r
+    except:
+        print("error")
+
+
+def if_room_occupied_for_change(id, rid, check_in, check_out):  # 换房状态for时间
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select * from main_state where id = %d" % rid
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        sql = "select check_in_date,check_out_date from main_order where id = '%s'" % id
+        cursor.execute(sql)
+        db.commit()
+        result2 = cursor.fetchone()
+        start = (check_in - datetime.date.today()).days + 1
+        finish = (check_out - datetime.date.today()).days + 1
+        start2 = (result2[0].date() - datetime.date.today()).days + 1
+        finish2 = (result2[1].date() - datetime.date.today()).days + 1
+        if_r = 0
+        for i in range(start, finish):
+            if result[i] == 1 and (i < start2 or i > finish2):
+                if_r = 1
+        return if_r
+    except:
+        print("error")
+
+
+def if_room_occupied_for_r(id, rid):  # 换房状态for房间
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select * from main_state where id = %d" % rid
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        sql = "select check_in_date,check_out_date from main_order where id = '%s'" % id
+        cursor.execute(sql)
+        db.commit()
+        result2 = cursor.fetchone()
+        start2 = (result2[0].date() - datetime.date.today()).days + 1
+        finish2 = (result2[1].date() - datetime.date.today()).days + 1
+        if_r = 0
+        for i in range(start2, finish2):
+            if result[i] == 1:
+                if_r = 1
+        return if_r
+    except:
+        print("error")
+
+
+def if_today_check(phone):  # 是否今天入住
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        come_day = datetime.date.today()
+        sql = "select * from main_order where phone = '%s' and check_in_date = '%s'" % (phone, come_day)
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+        return 1
+    except:
+        print("error")
+
+
+def room_follow_id(id):  # 订单查询房间
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select rid from main_order where id = '%s'" % id
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+        return result[0]
+    except:
+        print("error")
+

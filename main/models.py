@@ -23,7 +23,7 @@ class Order(models.Model):
 class Client(models.Model):
     phone = models.CharField(max_length=11, primary_key=True)  # 电话号码
     email = models.CharField(max_length=30)  # 电子邮件
-    name = models.CharField(max_length=6)  # 姓名
+    name = models.CharField(max_length=40)  # 姓名
     sex = models.CharField(max_length=4)  # 性别
 
     def __str__(self):

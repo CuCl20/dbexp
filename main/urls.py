@@ -15,5 +15,6 @@ urlpatterns = [
     path('submit2/', views.update_o, name="upd_o"),
     path('submit3/', views.update_r, name="upd_r"),
     path('submit4/', views.delete_o, name='del_o'),
+    path('submit5/', views.check_in_p, name='ci_p'),
     path('checkin/', views.check_in_progress, name='ctk_in')
 ]
