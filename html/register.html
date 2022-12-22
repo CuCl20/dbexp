@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>登录注册界面</title>
+    <title>注册界面</title>
     <style>.account {
         width: 500px;
-        height: 400px;
+        height: 420px;
         border: 2px solid #dddddd;
         border-radius: 5px;
         box-shadow: 5px 5px 20px #aaa;
@@ -40,8 +40,10 @@
             <button style="margin-top: 25px" type="submit" onclick="myfunc()" class="btn btn-primary">确认</button>
         </div>
         <div style="color: red;">{{ error_msg }}</div>
+        <div style="margin-left:150px;display: inline-block">
+        <button style="margin-top: 25px" type="button" onclick="location.href='http://127.0.0.1:8000'" class="btn btn-primary">返回登录界面</button>
+        </div>
     </form>
 </div>
-
 </body>
 </html>

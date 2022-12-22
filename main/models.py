@@ -9,9 +9,9 @@ class Order(models.Model):
     phone = models.CharField(max_length=11)  # 电话号码
     pay_method = models.IntegerField()  # 支付方式
     state = models.IntegerField()  # 订单状态
-    submit_date = models.DateTimeField()  # 订单提交时间
-    check_in_date = models.DateTimeField()  # 入住时间
-    check_out_date = models.DateTimeField()  # 退房时间
+    submit_date = models.DateField()  # 订单提交时间
+    check_in_date = models.DateField()  # 入住时间
+    check_out_date = models.DateField()  # 退房时间
     rid = models.IntegerField()  # 房号
 
     def __str__(self):
@@ -58,6 +58,7 @@ class State(models.Model):
 class Admin(models.Model):
     id = models.IntegerField(primary_key=True)  # 编号
     password = models.CharField(max_length=20, default='0000')  # 密码
+    last_log_time = models.DateField(default='2022-12-22')
 
     def __str__(self):
-        return self.id, self.password
+        return self.id, self.password, self.last_log_time

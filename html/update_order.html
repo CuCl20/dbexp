@@ -6,6 +6,37 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
 </head>
 <body>
+<h1>当前房间状况</h1>
+    <table>
+        <thead>
+        <tr>
+            <th scope="row">房间号</th>
+            <th>房间容量</th>
+            <th>{{ day1 }}</th>
+            <th>{{ day2 }}</th>
+            <th>{{ day3 }}</th>
+            <th>{{ day4 }}</th>
+            <th>{{ day5 }}</th>
+            <th>{{ day6 }}</th>
+            <th>{{ day7 }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in results %}
+        <tr>
+            <th scope="row">{{ i.0 }}</th>
+            <td>{{ i.1 }}</td>
+            <td>{{ i.2 }}</td>
+            <td>{{ i.3 }}</td>
+            <td>{{ i.4 }}</td>
+            <td>{{ i.5 }}</td>
+            <td>{{ i.6 }}</td>
+            <td>{{ i.7 }}</td>
+            <td>{{ i.8 }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <h1>修改订单时间</h1>
     <form action="/submit2/" method="post">
         {% csrf_token %}
@@ -35,6 +66,9 @@
         <input type="text" id="id3" name="id">
         <button type="submit">确认取消</button>
         {{ error3 }}
+    </form>
+    <form>
+        <input type="button" name="Submit" onclick="javascript:history.back(-1);" value="返回上一页">
     </form>
 </body>
 </html>

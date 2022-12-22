@@ -16,5 +16,8 @@ urlpatterns = [
     path('submit3/', views.update_r, name="upd_r"),
     path('submit4/', views.delete_o, name='del_o'),
     path('submit5/', views.check_in_p, name='ci_p'),
-    path('checkin/', views.check_in_progress, name='ctk_in')
+    path('checkin/', views.check_in_progress, name='ctk_in'),
+    path('checkout/', views.check_out_progress, name='ctk_out'),
+    path('submit6/', views.check_out_p, name='co_p'),
+    path('log_out/', views.log_out, name='logout')
 ]

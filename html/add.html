@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>旅店订单管理系统</title>
+    <title>添加新订单</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
 </head>
@@ -11,7 +11,7 @@
         <thead>
         <tr>
             <th scope="row">房间号</th>
-            <th>房间人数</th>
+            <th>房间容量</th>
             <th>{{ day1 }}</th>
             <th>{{ day2 }}</th>
             <th>{{ day3 }}</th>
@@ -44,23 +44,15 @@
         <input type="number" id="rid" name="rid">
         <label for="phone">电话号码</label>
         <input type="text" id="phone" name="phone">
-        <label for="pay_method">付款方式</label>
-        <select id="pay_method" name="pay_method">
-            <option value="1">云闪付</option>
-            <option value="2">微信支付</option>
-            <option value="3">支付宝</option>
-        </select>
-        <label for="state">订单状态</label>
-        <select id="state" name="state">
-            <option value="0">未支付</option>
-            <option value="1">已支付</option>
-        </select>
         <label for="check_in">入住日期</label>
         <input type="date" id="check_in" name="check_in">
         <label for="check_out">退房日期</label>
         <input type="date" id="check_out" name="check_out">
         <br>
         <input type="submit" value="提交">
+    </form>
+    <form>
+        <input type="button" name="Submit" onclick="location.href='http://127.0.0.1:8000/main'" value="返回上一页">
     </form>
 <div>
     {{ error }}

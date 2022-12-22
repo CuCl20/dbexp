@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>入住手续</title>
+    <title>退房手续</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
 </head>
 <body>
     <div>
-        <h1>今日未付款订单</h1>
+        <h1>今日可退房订单</h1>
             <table>
                 <thead>
                     <tr>
@@ -38,42 +38,16 @@
                 </tbody>
             </table>
     </div>
-    <form action="/submit5/" method="post">
+    <h1>核实个人信息</h1>
+    <form action="/submit6/" method="post">
         {% csrf_token %}
-        <h1>手续1：基本信息录入</h1>
-        <label for="name">旅客姓名</label>
+        <label for="name">姓名</label>
         <input type="text" id="name" name="name">
-        <label for="sex">性别</label>
-        <input type="text" id="sex" name="sex">
         <label for="phone">电话号码</label>
         <input type="text" id="phone" name="phone">
-        <label for="email">邮箱（非必填）</label>
-        <input type="text" id="email" name="email">
-        <h1>手续2：付款</h1>
-        <fieldset>
-            <legend>是否付款？</legend>
-            <label>
-                是
-                <input type="radio" name="pay" value="1">
-            </label>
-            <br>
-            <label>
-                否
-                <input type="radio" name="pay" value="0">
-            </label>
-            <br>
-            <label for="pay_method">付款方式</label>
-            <select id="pay_method" name="pay_method">
-                <option value="1">云闪付</option>
-                <option value="2">微信支付</option>
-                <option value="3">支付宝</option>
-            </select>
-        </fieldset>
         <button type="submit">确认</button>
+        {{ error }}
     </form>
-<div>
-    {{ error }}
-</div>
     <form>
         <input type="button" name="Submit" onclick="location.href='http://127.0.0.1:8000/main'" value="返回上一页">
     </form>

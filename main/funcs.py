@@ -7,8 +7,9 @@ def register(id, password):  # 注册
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "insert into main_admin(id, password) values(%d,'%s')" % \
-              (id, password)
+        today = datetime.date.today()
+        sql = "insert into main_admin(id, password, last_log_time) values(%d,'%s','%s')" % \
+              (id, password, today)
         cursor.execute(sql)
         db.commit()
         return True
@@ -26,6 +27,33 @@ def login(id):  # 登录
         results = cursor.fetchall()
         db.close()
         return results
+    except:
+        print("error")
+
+
+def find_log_time():
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "select last_log_time from main_admin"
+        cursor.execute(sql)
+        results = cursor.fetchone()
+        db.close()
+        return results[0]
+    except:
+        print("error")
+
+
+def update_log_time():
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        today = datetime.date.today()
+        sql = "update main_admin set last_log_time = '%s'" % today
+        cursor.execute(sql)
+        db.commit()
     except:
         print("error")
 
@@ -164,8 +192,8 @@ def update_order_check(id, new_check_in, new_check_out):  # 修改订单时间
         cursor.execute(sql)
         results = cursor.fetchall()
         for row in results:
-            check_in = row[5].date()
-            check_out = row[6].date()
+            check_in = row[5]
+            check_out = row[6]
             rid = row[7]
             change_room_state(rid, check_in, check_out, 0)
             change_room_state(rid, new_check_in, new_check_out, 1)
@@ -207,8 +235,8 @@ def change_room(id, old_rid, new_rid):  # 换房&修改订单房间
         cursor.execute(sql)
         result = cursor.fetchall()
         for row in result:
-            check_in = row[0].date()
-            check_out = row[1].date()
+            check_in = row[0]
+            check_out = row[1]
             change_room_state(old_rid, check_in, check_out, 0)
             change_room_state(new_rid, check_in, check_out, 1)
         db.close()
@@ -216,12 +244,12 @@ def change_room(id, old_rid, new_rid):  # 换房&修改订单房间
         print("Error:unable to change rooms")
 
 
-def update_order_payment(phone):  # 订单付款
+def update_order_payment(pay_method, phone):  # 订单付款
     try:
         db = pymysql.connect(host='localhost', user='root',
                              password='yhv5tgh233', port=3306, db='datademo')
         cursor = db.cursor()
-        sql = "update main_order set state = 1 where phone='%s'" % phone
+        sql = "update main_order set pay_method = %d, state = 1 where phone='%s' and state = 0" % (pay_method, phone)
         cursor.execute(sql)
         db.commit()
         db.close()
@@ -253,8 +281,8 @@ def delete_order(id):  # 按订单号删除订单
         cursor.execute(sql)
         result = cursor.fetchall()
         for row in result:
-            check_in = row[0].date()
-            check_out = row[1].date()
+            check_in = row[0]
+            check_out = row[1]
             rid = row[2]
             change_room_state(rid, check_in, check_out, 0)
         db.commit()
@@ -263,7 +291,7 @@ def delete_order(id):  # 按订单号删除订单
         db.commit()
         db.close()
     except:
-        print("Error:unable to update pay state")
+        print("Error:unable to delete order")
 
 
 def update_time():  # 时间更新
@@ -365,8 +393,8 @@ def if_room_occupied_for_change(id, rid, check_in, check_out):  # 换房状态fo
         result2 = cursor.fetchone()
         start = (check_in - datetime.date.today()).days + 1
         finish = (check_out - datetime.date.today()).days + 1
-        start2 = (result2[0].date() - datetime.date.today()).days + 1
-        finish2 = (result2[1].date() - datetime.date.today()).days + 1
+        start2 = (result2[0] - datetime.date.today()).days + 1
+        finish2 = (result2[1] - datetime.date.today()).days + 1
         if_r = 0
         for i in range(start, finish):
             if result[i] == 1 and (i < start2 or i > finish2):
@@ -389,8 +417,8 @@ def if_room_occupied_for_r(id, rid):  # 换房状态for房间
         cursor.execute(sql)
         db.commit()
         result2 = cursor.fetchone()
-        start2 = (result2[0].date() - datetime.date.today()).days + 1
-        finish2 = (result2[1].date() - datetime.date.today()).days + 1
+        start2 = (result2[0] - datetime.date.today()).days + 1
+        finish2 = (result2[1] - datetime.date.today()).days + 1
         if_r = 0
         for i in range(start2, finish2):
             if result[i] == 1:
@@ -429,6 +457,38 @@ def room_follow_id(id):  # 订单查询房间
         if result is None:
             return 0
         return result[0]
+    except:
+        print("error")
+
+
+def if_today_cout(phone):
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        come_day = datetime.date.today()
+        sql = "select * from main_order where phone = '%s' and check_out_date = '%s'" % (phone, come_day)
+        cursor.execute(sql)
+        db.commit()
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+        return 1
+    except:
+        print("error")
+
+
+def check_out(phone):
+    try:
+        db = pymysql.connect(host='localhost', user='root',
+                             password='yhv5tgh233', port=3306, db='datademo')
+        cursor = db.cursor()
+        sql = "delete from main_client where phone = '%s'" % phone
+        cursor.execute(sql)
+        db.commit()
+        sql = "update main_order set state = 2 where phone = '%s' and state = 1" % phone
+        cursor.execute(sql)
+        db.commit()
     except:
         print("error")
 
